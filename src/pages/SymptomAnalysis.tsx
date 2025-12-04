@@ -167,9 +167,11 @@ const SymptomAnalysis = () => {
           <Button size="lg" leftIcon={<Calendar className="w-5 h-5" />}>
             Start a 7-Day Healing Plan
           </Button>
-          <Button asChild variant="outline" size="lg" leftIcon={<Camera className="w-5 h-5" />}>
-            <Link to="/prescriptions">Scan My Prescription</Link>
-          </Button>
+          <Link to="/prescriptions">
+            <Button variant="outline" size="lg" leftIcon={<Camera className="w-5 h-5" />}>
+              Scan My Prescription
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </Layout>

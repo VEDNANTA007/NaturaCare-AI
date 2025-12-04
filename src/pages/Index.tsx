@@ -88,12 +88,16 @@ const Index = () => {
                 transition={{ delay: 0.4, duration: 0.5 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
-                <Button asChild variant="hero" size="lg" leftIcon={<Activity className="w-5 h-5" />}>
-                  <Link to="/symptom-checker">Describe Your Symptoms</Link>
-                </Button>
-                <Button asChild variant="hero-secondary" size="lg" leftIcon={<Camera className="w-5 h-5" />}>
-                  <Link to="/prescriptions">Scan Your Prescription</Link>
-                </Button>
+                <Link to="/symptom-checker">
+                  <Button variant="hero" size="lg" leftIcon={<Activity className="w-5 h-5" />}>
+                    Describe Your Symptoms
+                  </Button>
+                </Link>
+                <Link to="/prescriptions">
+                  <Button variant="hero-secondary" size="lg" leftIcon={<Camera className="w-5 h-5" />}>
+                    Scan Your Prescription
+                  </Button>
+                </Link>
               </motion.div>
             </div>
           </motion.div>
