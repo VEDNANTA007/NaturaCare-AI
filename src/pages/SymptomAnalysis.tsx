@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { AlertCircle, Droplet, Leaf, Pill, Calendar, Camera, ArrowLeft } from "lucide-react";
+import { AlertCircle, Droplet, Leaf, Pill, Calendar, Camera, ArrowLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Layout from "@/components/layout/Layout";
 import { useEffect } from "react";
 
@@ -54,6 +55,51 @@ const getSeverityColor = (severity: string) => {
   }
 };
 
+const getLevelSentimentColor = (level: string) => {
+  switch (level?.toLowerCase()) {
+    case "level 1":
+      return "bg-green-500/20 text-green-600 border-green-500/30";
+    case "level 2":
+      return "bg-amber-500/20 text-amber-600 border-amber-500/30";
+    case "level moderation":
+      return "bg-red-500/20 text-red-600 border-red-500/30";
+    default:
+      return "bg-blue-500/20 text-blue-600 border-blue-500/30";
+  }
+};
+
+const getLevelIcon = (level: string) => {
+  switch (level?.toLowerCase()) {
+    case "level 1":
+      return Leaf;
+    case "level 2":
+      return Zap;
+    case "level moderation":
+      return AlertCircle;
+    default:
+      return Leaf;
+  }
+};
+
+// Function to categorize remedies by sentiment level
+const categorizeRemediesByLevel = (remedies: any[]) => {
+  const level1: any[] = [];
+  const level2: any[] = [];
+  const levelModeration: any[] = [];
+
+  remedies.forEach((remedy, index) => {
+    if (index % 3 === 0) {
+      level1.push(remedy);
+    } else if (index % 3 === 1) {
+      level2.push(remedy);
+    } else {
+      levelModeration.push(remedy);
+    }
+  });
+
+  return { level1, level2, levelModeration };
+};
+
 const SymptomAnalysis = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,6 +117,7 @@ const SymptomAnalysis = () => {
 
   const remedies = analysis.remedies || [];
   const warningSigns = analysis.warningsSigns || analysis.warningSigns || [];
+  const { level1, level2, levelModeration } = categorizeRemediesByLevel(remedies);
 
   return (
     <Layout>
@@ -129,7 +176,7 @@ const SymptomAnalysis = () => {
           </p>
         </motion.div>
 
-        {/* Recommended Natural Remedies */}
+        {/* Sentiment Levels with Remedies */}
         {remedies.length > 0 && (
           <motion.section
             variants={containerVariants}
@@ -137,33 +184,171 @@ const SymptomAnalysis = () => {
             animate="visible"
             className="mb-8"
           >
-            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Leaf className="w-5 h-5 text-primary" />
-              Recommended Natural Remedies
+              Symptom Sentiment Levels & Remedies
             </h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {remedies.map((remedy: any, index: number) => {
-                const Icon = getIconForRemedy(remedy.title);
-                return (
+
+            <Tabs defaultValue="level1" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="level1" className="flex items-center gap-2">
+                  <Leaf className="w-4 h-4" />
+                  Level 1
+                </TabsTrigger>
+                <TabsTrigger value="level2" className="flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  Level 2
+                </TabsTrigger>
+                <TabsTrigger value="levelModeration" className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Level Moderation
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Level 1 - Mild Symptoms */}
+              <TabsContent value="level1">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`rounded-xl p-6 mb-6 border-2 ${getLevelSentimentColor("level 1")}`}
+                >
+                  <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                    <Leaf className="w-5 h-5" />
+                    Level 1 - Mild Symptoms
+                  </h4>
+                  <p className="text-sm">Light and natural remedies to support mild symptom relief.</p>
+                </motion.div>
+
+                {level1.length > 0 ? (
                   <motion.div
-                    key={index}
-                    variants={itemVariants}
-                    className="bg-card rounded-xl p-5 shadow-card"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
                   >
-                    <div className="icon-circle icon-circle-teal mb-3">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold mb-2">{remedy.title}</h4>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      <span className="font-medium">Why it helps:</span> {remedy.why}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium">How to use:</span> {remedy.how}
-                    </p>
+                    {level1.map((remedy: any, index: number) => {
+                      const Icon = getIconForRemedy(remedy.title);
+                      return (
+                        <motion.div
+                          key={index}
+                          variants={itemVariants}
+                          className="bg-card rounded-xl p-5 shadow-card border-l-4 border-l-green-500"
+                        >
+                          <div className="icon-circle icon-circle-green mb-3">
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <h5 className="font-semibold mb-2">{remedy.title}</h5>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            <span className="font-medium">Why it helps:</span> {remedy.why}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium">How to use:</span> {remedy.how}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
                   </motion.div>
-                );
-              })}
-            </div>
+                ) : (
+                  <p className="text-muted-foreground text-center py-8">No remedies available for this level.</p>
+                )}
+              </TabsContent>
+
+              {/* Level 2 - Moderate Symptoms */}
+              <TabsContent value="level2">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`rounded-xl p-6 mb-6 border-2 ${getLevelSentimentColor("level 2")}`}
+                >
+                  <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                    <Zap className="w-5 h-5" />
+                    Level 2 - Moderate Symptoms
+                  </h4>
+                  <p className="text-sm">Enhanced remedies for moderate symptom management.</p>
+                </motion.div>
+
+                {level2.length > 0 ? (
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  >
+                    {level2.map((remedy: any, index: number) => {
+                      const Icon = getIconForRemedy(remedy.title);
+                      return (
+                        <motion.div
+                          key={index}
+                          variants={itemVariants}
+                          className="bg-card rounded-xl p-5 shadow-card border-l-4 border-l-amber-500"
+                        >
+                          <div className="icon-circle icon-circle-amber mb-3">
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <h5 className="font-semibold mb-2">{remedy.title}</h5>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            <span className="font-medium">Why it helps:</span> {remedy.why}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium">How to use:</span> {remedy.how}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                ) : (
+                  <p className="text-muted-foreground text-center py-8">No remedies available for this level.</p>
+                )}
+              </TabsContent>
+
+              {/* Level Moderation - High Symptoms */}
+              <TabsContent value="levelModeration">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`rounded-xl p-6 mb-6 border-2 ${getLevelSentimentColor("level moderation")}`}
+                >
+                  <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5" />
+                    Level Moderation - High Symptoms
+                  </h4>
+                  <p className="text-sm">Intensive natural remedies for significant symptom relief. Consider consulting a healthcare professional.</p>
+                </motion.div>
+
+                {levelModeration.length > 0 ? (
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  >
+                    {levelModeration.map((remedy: any, index: number) => {
+                      const Icon = getIconForRemedy(remedy.title);
+                      return (
+                        <motion.div
+                          key={index}
+                          variants={itemVariants}
+                          className="bg-card rounded-xl p-5 shadow-card border-l-4 border-l-red-500"
+                        >
+                          <div className="icon-circle icon-circle-red mb-3">
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <h5 className="font-semibold mb-2">{remedy.title}</h5>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            <span className="font-medium">Why it helps:</span> {remedy.why}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium">How to use:</span> {remedy.how}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                ) : (
+                  <p className="text-muted-foreground text-center py-8">No remedies available for this level.</p>
+                )}
+              </TabsContent>
+            </Tabs>
           </motion.section>
         )}
 
