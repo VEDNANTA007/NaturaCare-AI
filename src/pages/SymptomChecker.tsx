@@ -5,6 +5,8 @@ import { Mic, Skull, Thermometer, Frown, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const commonSymptoms = [
   "Headache",
@@ -13,6 +15,10 @@ const commonSymptoms = [
   "Nausea",
   "Fatigue",
   "Sore Throat",
+  "Body Aches",
+  "Dizziness",
+  "Stomach Pain",
+  "Chest Tightness",
 ];
 
 const symptomInfoCards = [
@@ -65,21 +71,45 @@ const SymptomChecker = () => {
     if (!symptoms && selectedSymptoms.length === 0) return;
     
     setIsAnalyzing(true);
-    // Simulate AI analysis delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     
-    // Navigate to results with symptoms data
-    navigate("/symptom-analysis", {
-      state: {
-        symptoms: symptoms,
-        selectedSymptoms: selectedSymptoms,
-      },
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-symptoms', {
+        body: {
+          symptoms: symptoms,
+          selectedSymptoms: selectedSymptoms,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // Navigate to results with AI analysis data
+      navigate("/symptom-analysis", {
+        state: {
+          symptoms: symptoms,
+          selectedSymptoms: selectedSymptoms,
+          analysis: data,
+        },
+      });
+    } catch (error) {
+      console.error('Error analyzing symptoms:', error);
+      toast({
+        title: "Analysis Failed",
+        description: "Unable to analyze symptoms. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    // Voice recording would be implemented here
+    toast({
+      title: "Voice Input",
+      description: "Voice recording feature coming soon!",
+    });
   };
 
   const hasInput = symptoms.trim() || selectedSymptoms.length > 0;
@@ -153,7 +183,7 @@ const SymptomChecker = () => {
                 rightIcon={!isAnalyzing ? <Send className="w-4 h-4" /> : undefined}
                 className="w-full sm:w-auto"
               >
-                {isAnalyzing ? "Analyzing..." : "Analyze My Symptoms"}
+                {isAnalyzing ? "AI Analyzing..." : "Analyze My Symptoms"}
               </Button>
             </motion.div>
 
