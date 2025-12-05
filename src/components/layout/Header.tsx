@@ -1,20 +1,29 @@
-import { Link, useLocation } from "react-router-dom";
-import { Leaf, Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Leaf, Menu, X, Pill } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/symptom-checker", label: "Symptom Checker" },
   { href: "/prescriptions", label: "Prescriptions" },
   { href: "/remedies", label: "Natural Healing" },
+  { href: "/medications", label: "Medications", icon: Pill },
 ];
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-12 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -27,7 +36,7 @@ const Header = () => {
             </div>
             <span className="text-xl font-semibold">
               <span className="text-primary">Natura</span>
-              <span className="text-primary-blue">Care AI</span>
+              <span className="text-[hsl(var(--primary-blue))]">Care AI</span>
             </span>
           </Link>
 
@@ -38,12 +47,13 @@ const Header = () => {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary",
+                  "text-sm font-medium transition-colors hover:text-primary flex items-center gap-1",
                   location.pathname === link.href
                     ? "text-primary"
                     : "text-muted-foreground"
                 )}
               >
+                {link.icon && <link.icon className="w-4 h-4" />}
                 {link.label}
               </Link>
             ))}
@@ -51,10 +61,23 @@ const Header = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm">
-              Login
-            </Button>
-            <Button size="sm">Sign Up</Button>
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">{user.email}</span>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/auth">Login</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/auth">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -88,20 +111,31 @@ const Header = () => {
                   to={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "text-base font-medium transition-colors py-2",
+                    "text-base font-medium transition-colors py-2 flex items-center gap-2",
                     location.pathname === link.href
                       ? "text-primary"
                       : "text-muted-foreground"
                   )}
                 >
+                  {link.icon && <link.icon className="w-4 h-4" />}
                   {link.label}
                 </Link>
               ))}
               <div className="flex gap-3 pt-4 border-t border-border">
-                <Button variant="outline" className="flex-1">
-                  Login
-                </Button>
-                <Button className="flex-1">Sign Up</Button>
+                {user ? (
+                  <Button variant="outline" className="flex-1" onClick={handleSignOut}>
+                    Sign Out
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" className="flex-1" asChild>
+                      <Link to="/auth">Login</Link>
+                    </Button>
+                    <Button className="flex-1" asChild>
+                      <Link to="/auth">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </motion.div>
