@@ -22,3 +22,9 @@ verify_jwt = false
 
 [functions.scan-prescription]
 verify_jwt = false
+
+[functions.generate-remedy-image]
+verify_jwt = false
+
+[functions.seed-remedies]
+verify_jwt = false

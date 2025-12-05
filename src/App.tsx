@@ -11,6 +11,7 @@ import PrescriptionUpload from "./pages/PrescriptionUpload";
 import PrescriptionBreakdown from "./pages/PrescriptionBreakdown";
 import RemediesLibrary from "./pages/RemediesLibrary";
 import MedicationTracker from "./pages/MedicationTracker";
+import AdminImageRegeneration from "./pages/AdminImageRegeneration";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/prescription-breakdown" element={<PrescriptionBreakdown />} />
             <Route path="/remedies" element={<RemediesLibrary />} />
             <Route path="/medications" element={<MedicationTracker />} />
+            <Route path="/admin/regenerate-images" element={<AdminImageRegeneration />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
