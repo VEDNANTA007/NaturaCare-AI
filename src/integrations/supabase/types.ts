@@ -14,7 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      natural_remedies: {
+        Row: {
+          category: string
+          condition_treated: string[] | null
+          contraindications: string[] | null
+          created_at: string | null
+          dosage: string | null
+          duration: string | null
+          evidence_level: string | null
+          frequency: string | null
+          how_it_works: string | null
+          id: string
+          image_url: string | null
+          ingredients: string[] | null
+          name: string
+          pregnancy_safe: boolean | null
+          preparation_steps: string[] | null
+          rating: number | null
+          region: string | null
+          safety_warnings: string[] | null
+          tags: string[] | null
+          traditional_name: string | null
+          updated_at: string | null
+          why_it_helps: string | null
+        }
+        Insert: {
+          category: string
+          condition_treated?: string[] | null
+          contraindications?: string[] | null
+          created_at?: string | null
+          dosage?: string | null
+          duration?: string | null
+          evidence_level?: string | null
+          frequency?: string | null
+          how_it_works?: string | null
+          id: string
+          image_url?: string | null
+          ingredients?: string[] | null
+          name: string
+          pregnancy_safe?: boolean | null
+          preparation_steps?: string[] | null
+          rating?: number | null
+          region?: string | null
+          safety_warnings?: string[] | null
+          tags?: string[] | null
+          traditional_name?: string | null
+          updated_at?: string | null
+          why_it_helps?: string | null
+        }
+        Update: {
+          category?: string
+          condition_treated?: string[] | null
+          contraindications?: string[] | null
+          created_at?: string | null
+          dosage?: string | null
+          duration?: string | null
+          evidence_level?: string | null
+          frequency?: string | null
+          how_it_works?: string | null
+          id?: string
+          image_url?: string | null
+          ingredients?: string[] | null
+          name?: string
+          pregnancy_safe?: boolean | null
+          preparation_steps?: string[] | null
+          rating?: number | null
+          region?: string | null
+          safety_warnings?: string[] | null
+          tags?: string[] | null
+          traditional_name?: string | null
+          updated_at?: string | null
+          why_it_helps?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
