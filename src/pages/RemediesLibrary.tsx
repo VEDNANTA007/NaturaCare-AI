@@ -8,20 +8,24 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import RemedyDetailDialog from "@/components/remedies/RemedyDetailDialog";
 
-import gingerTea from "@/assets/remedies/ginger-tea.jpg";
-import echinacea from "@/assets/remedies/echinacea.jpg";
-import peppermint from "@/assets/remedies/peppermint.jpg";
-import chamomile from "@/assets/remedies/chamomile.jpg";
+import gingerTurmericTea from "@/assets/remedies/ginger-turmeric-tea.jpg";
+import echinaceaTincture from "@/assets/remedies/echinacea-tincture.jpg";
+import peppermintOil from "@/assets/remedies/peppermint-oil.jpg";
+import chamomileTea from "@/assets/remedies/chamomile-tea.jpg";
+import honeyLemonWater from "@/assets/remedies/honey-lemon-water.jpg";
+import tulsiSteam from "@/assets/remedies/tulsi-steam.jpg";
+import triphalaPowder from "@/assets/remedies/triphala-powder.jpg";
+import ashwagandhaMilk from "@/assets/remedies/ashwagandha-milk.jpg";
 
 const fallbackImages: Record<string, string> = {
-  "ginger-turmeric-tea": gingerTea,
-  "echinacea-tincture": echinacea,
-  "peppermint-oil": peppermint,
-  "chamomile-tea": chamomile,
-  "honey-lemon-water": gingerTea,
-  "tulsi-steam": echinacea,
-  "triphala-powder": chamomile,
-  "ashwagandha-milk": peppermint,
+  "ginger-turmeric-tea": gingerTurmericTea,
+  "echinacea-tincture": echinaceaTincture,
+  "peppermint-oil": peppermintOil,
+  "chamomile-tea": chamomileTea,
+  "honey-lemon-water": honeyLemonWater,
+  "tulsi-steam": tulsiSteam,
+  "triphala-powder": triphalaPowder,
+  "ashwagandha-milk": ashwagandhaMilk,
 };
 
 const categories = ["All", "Immunity", "Digestion", "Respiratory", "Sleep Aid", "Pain Relief", "Stress Relief"];
@@ -62,7 +66,7 @@ const RemediesLibrary = () => {
     if (remedy.image_url && remedy.image_url.startsWith('http')) {
       return remedy.image_url;
     }
-    return fallbackImages[remedy.id] || gingerTea;
+    return fallbackImages[remedy.id] || gingerTurmericTea;
   };
 
   const handleSeedData = async () => {
